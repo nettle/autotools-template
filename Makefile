@@ -4,6 +4,7 @@ SUBDIRS = inc src test
 SOURCES = $(wildcard */*.c*)
 HEADERS = $(wildcard */*.h*)
 DOXYGEN = $(SOURCES) $(HEADERS) $(wildcard *.md) Doxyfile
+RUNTEST = cd bin && ./test ; cd -
 MAKE = make -f GNUMakefile
 
 init       : GNUMakefile      ## Initialize auto tools (aclocal, autoconf, automake, configure)
@@ -37,13 +38,26 @@ clean      :                  ## Remove generated files (object files and binari
 		rm -f $$dir/*.lo; \
 		rm -f $$dir/.dirstamp; \
 		rm -fr $$dir/.libs; \
+		rm -f $$dir/*.gcda $$dir/*.gcno; \
 	done;
 	rm -rf bin lib install
 	rm -rf doxygen
 	rm -rf test-suite.log
+	rm -rf coverage coverage.info
 
 build      : GNUMakefile      ## Build
-	$(MAKE)
+	$(MAKE) $(FLAGS)
+
+coverage   : FLAGS=CPPFLAGS="-g -O0 --coverage" LDFLAGS="-lgcov --coverage"
+coverage   : build
+coverage   : coverage.info    ## Code coverage (gcov + lcov)
+coverage.info : bin/test
+	$(value RUNTEST) && \
+	rm -rf coverage && \
+	lcov --directory . --capture --output-file coverage.info && \
+	lcov --remove coverage.info '/usr/*' --output-file coverage.info && \
+	lcov --list coverage.info && \
+	genhtml --output-directory coverage coverage.info
 
 rebuild    : clean-all build  ## Remove all generated files and build again
 
@@ -54,7 +68,7 @@ check      : build            ## Run check (automake TESTS)
 	$(MAKE) check MAKE="$(MAKE)"
 
 run-tests  : build            ## Run tests (bin/test executable)
-	cd bin && ./test ; cd -
+	$(value RUNTEST)
 
 docker     :                  ## Build and run tests in Docker container
 	docker build .

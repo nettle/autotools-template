@@ -1,4 +1,4 @@
-CPPFLAGS = \
+AM_CPPFLAGS = \
  -Iinc -Isrc \
  -Wall -Wextra -Werror
 

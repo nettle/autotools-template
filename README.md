@@ -14,6 +14,7 @@ Features
 * Autoconf + automake
 * Automake TESTS (make check)
 * Simplest Doxygen config
+* Code coverage report with lcov
 * Docker build (checks build only)
 
 Requirements
@@ -31,6 +32,7 @@ In Ubuntu can be installed with:
 
 Optional:
 
+* Code coverage (`sudo apt-get install lcov`)
 * Doxygen (`sudo apt-get install doxygen`)
 * Docker ([install](https://docs.docker.com/install/))
 
@@ -54,6 +56,11 @@ See all commands:
 Clean all:
 
     make clean-all
+
+Generate code coverage report:
+
+    make clean
+    make coverage
 
 Generate Doxygen files
 
