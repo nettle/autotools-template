@@ -31,11 +31,8 @@ In Ubuntu can be installed with:
 
 Optional:
 
-* Doxygen
-* Docker
-
-    sudo apt-get install doxygen
-    sudo apt-get install docker.io
+* Doxygen (`sudo apt-get install doxygen`)
+* Docker ([install](https://docs.docker.com/install/))
 
 How to build
 ------------
