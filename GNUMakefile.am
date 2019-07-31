@@ -1,0 +1,37 @@
+CPPFLAGS = \
+ -Iinc -Isrc \
+ -Wall -Wextra -Werror
+
+# Static lib:
+noinst_LTLIBRARIES = lib/libexample.la
+lib_libexample_la_SOURCES = \
+ src/example.cc
+lib_libexample_la_LDFLAGS = -static
+
+# Shared object:
+lib_LTLIBRARIES = bin/libexample.la
+bin_libexample_la_SOURCES = $(lib_libexample_la_SOURCES)
+bin_libexample_la_LDFLAGS = -module -avoid-version -shared
+
+# Binaries:
+bin_PROGRAMS = \
+ bin/app \
+ bin/test
+
+# Application (CLI)
+bin_app_SOURCES = src/app.cc
+bin_app_LDADD = lib/libexample.la
+
+# Test binary
+bin_test_SOURCES = test/test.cc
+bin_test_LDADD = -ldl lib/libexample.la
+
+# Test can be executed as: make check
+TESTS = bin/test
+AM_TESTS_ENVIRONMENT = LD_LIBRARY_PATH=bin
+
+# Copy shared object to bin
+.PHONY: copy-files
+all-local:: copy-files
+copy-files: $(lib_LTLIBRARIES)
+	cp $(top_builddir)/bin/.libs/libexample.so $(top_builddir)/bin/

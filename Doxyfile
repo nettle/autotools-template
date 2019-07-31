@@ -1,0 +1,6 @@
+PROJECT_NAME           = "C/C++ autoconf template"
+OUTPUT_DIRECTORY       = doxygen
+USE_MDFILE_AS_MAINPAGE = README.md
+RECURSIVE              = YES
+SOURCE_BROWSER         = YES
+STRIP_CODE_COMMENTS    = NO
