@@ -1,3 +1,4 @@
+# Verbosity flags
 ifdef V
 VERBOSE = --verbose
 else
@@ -5,13 +6,26 @@ Q = @
 QUIET = --quiet
 endif
 
+# Project settings
 SUBDIRS = inc src test
 INCDIRS = -Iinc -Isrc
 SOURCES = $(wildcard */*.c*)
 HEADERS = $(wildcard */*.h*)
-DOXYGEN = $(SOURCES) $(HEADERS) $(wildcard *.md) Doxyfile
+DOXYSRC = $(SOURCES) $(HEADERS) $(wildcard *.md) Doxyfile
+DOXYGEN = doxygen
 RUNTEST = cd bin && ./test ; cd -
-CPPCHECK = $(Q)cppcheck --enable=all --inconclusive --std=posix $(QUIET) $(INCDIRS) $(SUBDIRS)
+DOCKER  = docker build .
+CPPCHECK = cppcheck --enable=all --inconclusive --std=posix $(QUIET) $(INCDIRS) $(SUBDIRS)
+COVFLAGS = CPPFLAGS="-g -O0 --coverage" LDFLAGS="-lgcov --coverage"
+COVFILES = bin/test
+COVERAGE = $(RUNTEST) && \
+	rm -rf coverage && \
+	lcov $(QUIET) --directory . --capture --output-file coverage.info && \
+	lcov $(QUIET) --remove coverage.info '/usr/*' --output-file coverage.info && \
+	lcov $(QUIET) --list coverage.info && \
+	genhtml $(QUIET) --output-directory coverage coverage.info
+
+# Automake macros
 MAKE = make -f GNUMakefile
 AM = $(Q)$(MAKE) Q=$(Q) MAKE="$(MAKE)"
 
@@ -58,17 +72,6 @@ clean      :                  ## Remove generated files (object files and binari
 build      : GNUMakefile      ## Build
 	$(AM) $(FLAGS)
 
-coverage   : FLAGS=CPPFLAGS="-g -O0 --coverage" LDFLAGS="-lgcov --coverage"
-coverage   : build
-coverage   : coverage.info    ## Code coverage (gcov + lcov)
-coverage.info : bin/test
-	$(value RUNTEST) && \
-	rm -rf coverage && \
-	lcov --directory . --capture --output-file coverage.info && \
-	lcov --remove coverage.info '/usr/*' --output-file coverage.info && \
-	lcov --list coverage.info && \
-	genhtml --output-directory coverage coverage.info
-
 rebuild    : clean-all build  ## Remove all generated files and build again
 
 install    : build            ## Install (e.g. make install DESTDIR=$PWD/install)
@@ -78,16 +81,22 @@ check      : build            ## Run check (automake TESTS)
 	$(AM) check
 
 run-tests  : build            ## Run tests (bin/test executable)
-	$(Q)$(value RUNTEST)
+	$(Q)$(RUNTEST)
 
 docker     :                  ## Build and run tests in Docker container
-	docker build .
+	$(Q)$(DOCKER)
 
-doxygen    : $(DOXYGEN)       ## Generate Doxygen documentation
-	doxygen
+doxygen    : $(DOXYSRC)       ## Generate Doxygen documentation
+	$(Q)$(DOXYGEN)
 
 cppcheck   :                  ## Run cppcheck
-	$(CPPCHECK)
+	$(Q)$(CPPCHECK)
+
+coverage   : FLAGS=$(COVFLAGS)
+coverage   : build
+coverage   : coverage.info    ## Code coverage (lcov) NOTE: run make clean first!
+coverage.info : $(COVFILES)
+	$(Q)$(COVERAGE)
 
 help       :                  ## Show this help
 	@echo Goals:
