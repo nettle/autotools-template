@@ -34,4 +34,4 @@ AM_TESTS_ENVIRONMENT = LD_LIBRARY_PATH=bin
 .PHONY: copy-files
 all-local:: copy-files
 copy-files: $(lib_LTLIBRARIES)
-	cp $(top_builddir)/bin/.libs/libexample.so $(top_builddir)/bin/
+	$(Q)cp $(top_builddir)/bin/.libs/libexample.so $(top_builddir)/bin/

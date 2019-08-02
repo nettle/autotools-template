@@ -10,5 +10,9 @@ AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_INSTALL
 
+AC_CHECK_PROGS([DOXYGEN],  [doxygen],  [yes])
+AC_CHECK_PROGS([LCOV],     [lcov],     [yes])
+AC_CHECK_PROGS([CPPCHECK], [cppcheck], [yes])
+
 AC_CONFIG_FILES(GNUMakefile)
 AC_OUTPUT

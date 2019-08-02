@@ -33,6 +33,7 @@ In Ubuntu can be installed with:
 Optional:
 
 * Code coverage (`sudo apt-get install lcov`)
+* Cppcheck (`sudo apt-get install cppcheck`)
 * Doxygen (`sudo apt-get install doxygen`)
 * Docker ([install](https://docs.docker.com/install/))
 
