@@ -1,0 +1,33 @@
+# Autoconf + Automake
+GNUMakefile
+GNUMakefile.in
+aclocal.m4
+autom4te.cache/
+build-aux/
+config.log
+config.status
+configure
+libtool
+ltmain.sh
+m4/
+*-libtool
+*/.deps/
+
+# Build
+bin/
+install/
+lib/
+test-suite.log
+*/.dirstamp
+*/.libs/
+*/*.o
+*/*.lo
+
+# Doxygen
+doxygen/
+
+# Code coverage
+coverage/
+coverage.info
+*/*.gcda
+*/*.gcno
