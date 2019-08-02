@@ -30,7 +30,7 @@ In Ubuntu can be installed with:
     sudo apt-get install gcc g++
     sudo apt-get install autoconf automake libtool
 
-Optional:
+### Optional:
 
 * Code coverage (`sudo apt-get install lcov`)
 * Cppcheck (`sudo apt-get install cppcheck`)
