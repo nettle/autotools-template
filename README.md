@@ -28,7 +28,7 @@ In Ubuntu can be installed with:
 
     sudo apt-get install build-essential
     sudo apt-get install gcc g++
-    sudo apt-get install autoconf automake libtool gcc g++
+    sudo apt-get install autoconf automake libtool
 
 Optional:
 
@@ -57,6 +57,14 @@ See all commands:
 Clean all:
 
     make clean-all
+
+Run make with verbose output:
+
+    make V=1
+
+Run Cppcheck:
+
+    make cppcheck
 
 Generate code coverage report:
 
